@@ -47,6 +47,7 @@ riscv_srcs = \
 	devices.cc \
 	rom.cc \
 	rtc.cc \
+	uart.cc \
 	gdbserver.cc \
 	debug_module.cc \
 	$(riscv_gen_srcs) \

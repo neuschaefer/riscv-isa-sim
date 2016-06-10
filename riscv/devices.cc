@@ -1,4 +1,5 @@
 #include "devices.h"
+#include <stdio.h>
 
 void bus_t::add_device(reg_t addr, abstract_device_t* dev)
 {

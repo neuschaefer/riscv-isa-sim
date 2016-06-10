@@ -51,6 +51,7 @@ sim_t::sim_t(const char* isa, size_t nprocs, size_t mem_mb, bool halted,
   }
 
   rtc.reset(new rtc_t(procs));
+  uart.reset(new uart_t());
   make_config_string();
 }
 
@@ -149,11 +150,14 @@ bool sim_t::mmio_store(reg_t addr, size_t len, const uint8_t* bytes)
 
 void sim_t::make_config_string()
 {
-  reg_t rtc_addr = EXT_IO_BASE;
+  reg_t rtc_addr  = EXT_IO_BASE;
+  reg_t uart_addr = EXT_IO_BASE + 0x1000;
+
   bus.add_device(rtc_addr, rtc.get());
+  bus.add_device(uart_addr, uart.get());
 
   const int align = 0x1000;
-  reg_t cpu_addr = rtc_addr + ((rtc->size() - 1) / align + 1) * align;
+  reg_t cpu_addr = uart_addr + ((rtc->size() - 1) / align + 1) * align;
   reg_t cpu_size = align;
 
   uint32_t reset_vec[8] = {
@@ -175,6 +179,9 @@ void sim_t::make_config_string()
         "};\n"
         "rtc {\n"
         "  addr 0x" << rtc_addr << ";\n"
+        "};\n"
+        "uart {\n"
+        "  addr 0x" << uart_addr << ";\n"
         "};\n"
         "ram {\n"
         "  0 {\n"
